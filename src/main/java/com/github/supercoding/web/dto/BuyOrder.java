@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Setter
+
 public class BuyOrder {
     private  Integer itemId;
     private  Integer itemNums;

@@ -1,9 +1,12 @@
 package com.github.supercoding.repository.users;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class UserJdbcTemplateDao implements UserRepository {
@@ -23,7 +26,10 @@ public class UserJdbcTemplateDao implements UserRepository {
                     .build());
 
     @Override
-    public UserEntity findUserById(Integer userId) {
-        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE user_id=?", userEntityRowMapper, userId);
+    public Optional<UserEntity> findUserById(Integer userId) {
+        try{
+         return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT * FROM users WHERE user_id=?", userEntityRowMapper, userId));
+        }catch (Exception e){
+        return Optional.empty();}
     }
 }
