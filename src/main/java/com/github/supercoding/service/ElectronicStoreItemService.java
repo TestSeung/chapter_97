@@ -9,15 +9,22 @@ import com.github.supercoding.web.dto.BuyOrder;
 import com.github.supercoding.web.dto.Item;
 import com.github.supercoding.web.dto.ItemBody;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ElectronicStoreItemService {
+
+   // private final Logger logger= LoggerFactory.getLogger(this.getClass()); //Slf4j
     private final ElectronicStoreItemRepository electronicStoreItemRepository;
     private final StoreSalesRepository storeSalesRepository;
 
@@ -69,7 +76,11 @@ public class ElectronicStoreItemService {
 
         ItemEntity itemEntity = electronicStoreItemRepository.findItem(itemId);
 
-        if(itemEntity.getStoreId()==null) throw new RuntimeException("매장을 찾을 수 없습니다");
+        if(itemEntity.getStoreId()==null) {
+            log.error("매장을 찾을 수 없습니다.");
+            throw new RuntimeException("매장을 찾을 수 없습니다");
+        }
+
         if (itemEntity.getStock()<= 0)throw new RuntimeException("상품의 재고가 없습니다");
 
         Integer successBuyItemNums; //사려는 수량보다 적을 때 적은수량을 반환 아니면 그대로 줌

@@ -6,14 +6,21 @@ import com.github.supercoding.web.dto.BuyOrder;
 import com.github.supercoding.web.dto.Item;
 import com.github.supercoding.web.dto.ItemBody;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor //의존성주입
+@Slf4j
 public class ElectronicStoreController {
+
+
     //bean은 final로
     private final ElectronicStoreItemService electronicStoreItemService;
 
@@ -26,7 +33,11 @@ public class ElectronicStoreController {
 
     @GetMapping("/items")
     public List<Item> findAllItem(){
-        return electronicStoreItemService.findAllItem();
+        log.info("GET /Items 요청 들어옴.");
+        //return electronicStoreItemService.findAllItem();
+        List<Item>items =electronicStoreItemService.findAllItem();
+        log.info("GET /items 응답: "+items);
+        return items;
     };
 
     @PostMapping("/items")
