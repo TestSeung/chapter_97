@@ -1,9 +1,18 @@
 package com.github.supercoding.repository.airlineTicket;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AirlineTicket {
     private Integer ticketId;
     private String ticketType;
@@ -13,9 +22,6 @@ public class AirlineTicket {
     private LocalDateTime returnAt;
     private Double tax;
     private Double totalPrice;
-
-    public AirlineTicket() {
-    }
 
     public AirlineTicket(Integer ticketId, String ticketType, String departureLocation, String arrivalLocation, Date departureAt, Date returnAt, Double tax, Double totalPrice) {
         this.ticketId = ticketId;

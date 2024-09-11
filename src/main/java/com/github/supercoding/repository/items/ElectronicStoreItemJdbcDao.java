@@ -1,5 +1,6 @@
 package com.github.supercoding.repository.items;
 
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,20 +11,22 @@ import java.util.List;
 
 //@Primary //dao가 2개이상일때 우선권
 @Repository
+
 public class ElectronicStoreItemJdbcDao implements ElectronicStoreItemRepository{
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    static RowMapper<ItemEntity> itemEntityRowMapper =((rs, rowNum)->new ItemEntity(
-            rs.getInt("id"),
-            rs.getNString("name"),
-            rs.getNString("type"),
-            rs.getInt("price"),
-            rs.getInt("store_id"),
-            rs.getInt("stock"),
-            rs.getNString("cpu"),
-            rs.getNString("capacity")
-    ));
+    static RowMapper<ItemEntity> itemEntityRowMapper =((rs, rowNum)->
+            new ItemEntity.ItemEntityBuilder()
+                    .id(rs.getInt("id"))
+                    .name(rs.getNString("name"))
+                    .type(rs.getNString("type"))
+                    .price(rs.getInt("price"))
+                    .storeId(rs.getInt("store_id"))
+                    .stock(rs.getInt("stock"))
+                    .cpu(rs.getNString("cpu"))
+                    .capacity(rs.getNString("capacity"))
+                    .build());
 
     public ElectronicStoreItemJdbcDao(@Qualifier("jdbcTemplate1") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

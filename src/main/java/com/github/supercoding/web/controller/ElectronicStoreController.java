@@ -5,19 +5,17 @@ import com.github.supercoding.service.ElectronicStoreItemService;
 import com.github.supercoding.web.dto.BuyOrder;
 import com.github.supercoding.web.dto.Item;
 import com.github.supercoding.web.dto.ItemBody;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor //의존성주입
 public class ElectronicStoreController {
-
-    private ElectronicStoreItemService electronicStoreItemService;
-
-    public ElectronicStoreController(ElectronicStoreItemService electronicStoreItemService) {
-        this.electronicStoreItemService = electronicStoreItemService;
-    }
+    //bean은 final로
+    private final ElectronicStoreItemService electronicStoreItemService;
 
 //    private static int serialItemID =1;
 //    private List<Item> items = new ArrayList<>(Arrays.asList(
