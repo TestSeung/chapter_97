@@ -9,9 +9,9 @@ import com.github.supercoding.repository.reservations.Reservation;
 import com.github.supercoding.repository.reservations.ReservationRepository;
 import com.github.supercoding.repository.users.UserEntity;
 import com.github.supercoding.repository.users.UserRepository;
-import com.github.supercoding.service.Exceptions.InvalidValueException;
-import com.github.supercoding.service.Exceptions.NotAcceptException;
-import com.github.supercoding.service.Exceptions.NotFoundException;
+import com.github.supercoding.service.exceptions.InvalidValueException;
+import com.github.supercoding.service.exceptions.NotAcceptException;
+import com.github.supercoding.service.exceptions.NotFoundException;
 import com.github.supercoding.service.mapper.TicketMapper;
 import com.github.supercoding.web.dto.airline.ReservationRequest;
 import com.github.supercoding.web.dto.airline.ReservationResult;
@@ -39,7 +39,7 @@ public class AirReservationService {
 
 
 
-    public List<Ticket> findUserFavoritePlaceTickets(Integer userId, String ticketType) throws InvalidValueException, NotFoundException{
+    public List<Ticket> findUserFavoritePlaceTickets(Integer userId, String ticketType) throws InvalidValueException, NotFoundException {
         // 필요한 repository: userRepository,airLineTicketRepository
         //1. 유저를 userID로 가져와서,선호하는 여행지 도출
         //2. 선호하는 여행지와 ticketType으로 AirlineTicket table 질의 해서 필요한 AirlineTicket

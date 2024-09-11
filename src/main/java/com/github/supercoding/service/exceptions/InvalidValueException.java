@@ -1,4 +1,4 @@
-package com.github.supercoding.service.Exceptions;
+package com.github.supercoding.service.exceptions;
 
 public class InvalidValueException extends Exception {
 
