@@ -4,6 +4,7 @@ import com.github.supercoding.repository.items.ElectronicStoreItemRepository;
 import com.github.supercoding.repository.items.ItemEntity;
 import com.github.supercoding.repository.storeSales.StoreSales;
 import com.github.supercoding.repository.storeSales.StoreSalesRepository;
+import com.github.supercoding.service.mapper.ItemMapper;
 import com.github.supercoding.web.dto.BuyOrder;
 import com.github.supercoding.web.dto.Item;
 import com.github.supercoding.web.dto.ItemBody;
@@ -23,7 +24,7 @@ public class ElectronicStoreItemService {
 
     public List<Item> findAllItem() {
         List<ItemEntity>itemEntities=electronicStoreItemRepository.findAllItems();
-        return itemEntities.stream().map(Item::new).collect(Collectors.toList());
+        return itemEntities.stream().map(ItemMapper.ISTANCE::itemEntityToItem).collect(Collectors.toList());
     }
 
     public Integer saveItem(ItemBody itemBody) {
@@ -35,13 +36,13 @@ public class ElectronicStoreItemService {
 
     public Item findById(String id) {
         ItemEntity itemEntity = electronicStoreItemRepository.findItem(Integer.valueOf(id));
-        return new Item(itemEntity);
+        return ItemMapper.ISTANCE.itemEntityToItem(itemEntity);
     }
 
     public List<Item> findItemsByids(List<String> ids) {
         List<ItemEntity>itemEntities = electronicStoreItemRepository.findAllItems();
         return itemEntities.stream()
-                .map(Item::new)
+                .map(ItemMapper.ISTANCE::itemEntityToItem)
                 .filter((item)->ids.contains(item.getId()))
                 .collect(Collectors.toList());
     }
@@ -58,7 +59,7 @@ public class ElectronicStoreItemService {
                 itemBody.getSpec().getCapacity());
         ItemEntity itemEntityUpdated =electronicStoreItemRepository.updateItemEntity(idInt,itemEntity);
 
-        return new Item(itemEntityUpdated);
+        return ItemMapper.ISTANCE.itemEntityToItem(itemEntityUpdated);
     }
 
     @Transactional(transactionManager = "tm1")// 에러 날 시 롤백

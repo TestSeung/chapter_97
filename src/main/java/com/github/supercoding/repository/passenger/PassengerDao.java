@@ -7,14 +7,15 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class PassengerDao implements PassengerRepository{
+public class PassengerDao implements PassengerRepository {
     private JdbcTemplate jdbcTemplate;
 
-    static RowMapper<Passenger> itemEntityRowMapper =((rs, rowNum)->new Passenger(
-            rs.getInt("passenger_id"),
-            rs.getInt("user_id"),
-            rs.getNString("passport_num")
-    ));
+    static RowMapper<Passenger> itemEntityRowMapper = ((rs, rowNum) ->
+            new Passenger.PassengerBuilder()
+                    .passengerId(rs.getInt("passenger_id"))
+                    .userId(rs.getInt("user_id"))
+                    .passportNum(rs.getNString("passport_num"))
+                    .build());
 
     public PassengerDao(@Qualifier("jdbcTemplate2") JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -22,7 +23,7 @@ public class PassengerDao implements PassengerRepository{
 
     @Override
     public Passenger findPassengerByUserId(Integer userId) {
-        System.out.println("user id: "+userId);
+        System.out.println("user id: " + userId);
         return jdbcTemplate.queryForObject("select * from passenger where user_id=?", itemEntityRowMapper, userId);
     }
 }

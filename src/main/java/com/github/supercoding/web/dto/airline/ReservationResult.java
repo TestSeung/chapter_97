@@ -2,9 +2,16 @@ package com.github.supercoding.web.dto.airline;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ReservationResult {
     private List<Integer> prices;
@@ -13,34 +20,4 @@ public class ReservationResult {
     private Integer totalPrice;
     private Boolean success;
 
-    public ReservationResult() {
-    }
-
-    public ReservationResult(List<Integer> prices, List<Integer> charges, Integer tax, Integer totalPrice, Boolean success) {
-        this.prices = prices;
-        this.charges = charges;
-        this.tax = tax;
-        this.totalPrice = totalPrice;
-        this.success = success;
-    }
-
-    public List<Integer> getPrices() {
-        return prices;
-    }
-
-    public List<Integer> getCharges() {
-        return charges;
-    }
-
-    public Integer getTax() {
-        return tax;
-    }
-
-    public Integer getTotalPrice() {
-        return totalPrice;
-    }
-
-    public Boolean getSuccess() {
-        return success;
-    }
 }

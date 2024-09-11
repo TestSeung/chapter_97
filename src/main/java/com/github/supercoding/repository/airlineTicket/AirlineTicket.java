@@ -1,9 +1,6 @@
 package com.github.supercoding.repository.airlineTicket;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
@@ -13,6 +10,8 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "ticketId")
+
 public class AirlineTicket {
     private Integer ticketId;
     private String ticketType;
@@ -34,80 +33,4 @@ public class AirlineTicket {
         this.totalPrice = totalPrice;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AirlineTicket that = (AirlineTicket) o;
-        return Objects.equals(ticketId, that.ticketId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(ticketId);
-    }
-
-    public Integer getTicketId() {
-        return ticketId;
-    }
-
-    public void setTicketId(Integer ticketId) {
-        this.ticketId = ticketId;
-    }
-
-    public String getTicketType() {
-        return ticketType;
-    }
-
-    public void setTicketType(String ticketType) {
-        this.ticketType = ticketType;
-    }
-
-    public String getDepartureLocation() {
-        return departureLocation;
-    }
-
-    public void setDepartureLocation(String departureLocation) {
-        this.departureLocation = departureLocation;
-    }
-
-    public String getArrivalLocation() {
-        return arrivalLocation;
-    }
-
-    public void setArrivalLocation(String arrivalLocation) {
-        this.arrivalLocation = arrivalLocation;
-    }
-
-    public LocalDateTime getDepartureAt() {
-        return departureAt;
-    }
-
-    public void setDepartureAt(LocalDateTime departureAt) {
-        this.departureAt = departureAt;
-    }
-
-    public LocalDateTime getReturnAt() {
-        return returnAt;
-    }
-
-    public void setReturnAt(LocalDateTime returnAt) {
-        this.returnAt = returnAt;
-    }
-
-    public Double getTax() {
-        return tax;
-    }
-
-    public void setTax(Double tax) {
-        this.tax = tax;
-    }
-
-    public Double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
 }
