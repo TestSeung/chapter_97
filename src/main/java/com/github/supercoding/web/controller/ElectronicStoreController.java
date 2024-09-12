@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,7 +45,7 @@ public class ElectronicStoreController {
         log.info("GET /items 응답: "+items);
         return items;
     };
-    @Operation(summary = "모든 Item을 등록")
+    @Operation(summary = "단일 Item을 등록")
     @PostMapping("/items")
     public String registerItem(@RequestBody ItemBody itemBody){
 //        Item newItem= new Item(serialItemID++,itemBody);
@@ -53,7 +55,7 @@ public class ElectronicStoreController {
         Integer itemId = electronicStoreItemService.saveItem(itemBody);
         return "ID: " +itemId;
     }
-    @Operation(summary = "모든 Item id로 검색")
+    @Operation(summary = "단일 Item id로 검색")
     @GetMapping("/items/{id}")
     public Item findItemByPathId(
             @Parameter(name ="id",description ="item ID",in = ParameterIn.PATH,example = "1")
@@ -68,10 +70,10 @@ public class ElectronicStoreController {
 //        return itemEntities.stream().map(Item::new).collect(Collectors.toList());
         return electronicStoreItemService.findById(id);
     }
-    @Operation(summary = "모든 Item id 쿼리문을 검색")
+    @Operation(summary = "단일 Item id 쿼리문을 검색")
     @GetMapping("/items-query")
     public Item findItemByQueryId(
-            @Parameter(name ="ids",description ="item IDs",in = ParameterIn.PATH,example = "[1,2,3]")
+            @Parameter(name ="id",description ="item ID",in = ParameterIn.PATH,example = "1")
             @RequestParam("id") String id){
 //        Item itemFounded = items.stream()
 //                .filter(item->item.getId().equals(id))
@@ -82,9 +84,11 @@ public class ElectronicStoreController {
 
         return electronicStoreItemService.findById(id);
     }
-    @Operation(summary = "모든 복수의 Item을 검색")
+    @Operation(summary = "id로 복수의 Item을 검색")
     @GetMapping("/items-queries") //복수의 데이터를 받는다
-    public List<Item> findItemByQueryIds(@RequestParam("id") List<String> ids){
+    public List<Item> findItemByQueryIds(
+            @Parameter(name ="ids",description ="item IDs",in = ParameterIn.PATH,example = "[1,2,3]")
+            @RequestParam("id") List<String> ids){
 
 //        Set<String> idSet = ids.stream().collect(Collectors.toSet());
 //
@@ -95,7 +99,7 @@ public class ElectronicStoreController {
 //
         return electronicStoreItemService.findItemsByids(ids);
     }
-    @Operation(summary = "모든 Item을 삭제")
+    @Operation(summary = "단일 Item을 삭제")
     @DeleteMapping("/items/{id}")
     public String deleteItemByPathId(@PathVariable String id){
 
@@ -108,10 +112,10 @@ public class ElectronicStoreController {
 
 //        return "Object with id"+ itemFounded.getId()+"has been deleted";
 
-        Integer idInt = electronicStoreItemService.deleteItem(id);
-        return "ID: " +idInt +"has been deleted";
+        electronicStoreItemService.deleteItem(id);
+        return "ID: "+id+" has been deleted";
     }
-    @Operation(summary = "모든 Item을 수정")
+    @Operation(summary = "단일 Item을 수정")
     @PutMapping("/items/{id}")
     public Item updateItem(@PathVariable String id,@RequestBody ItemBody itemBody){
 //        Item itemFounded = items.stream()
@@ -130,5 +134,30 @@ public class ElectronicStoreController {
     public String buyItem(@RequestBody BuyOrder buyOrder){
         Integer OrderItemNums= electronicStoreItemService.buyItems(buyOrder);
         return "요청하신 Item 중 "+OrderItemNums+"개를 구매 하였습니다.";
+    }
+    @Operation(summary = "id로 복수의 Item을 검색")
+    @GetMapping("/items-types") //복수의 데이터를 받는다
+    public List<Item> findItemByTypes(
+            @RequestParam("type") List<String> types){
+        return electronicStoreItemService.findItemsByTypes(types);
+    }
+
+    @Operation(summary = "단일 Item id 쿼리문을 검색")
+    @GetMapping("/items-prices")
+    public List<Item> findItemByPrices(
+            @RequestParam("max") Integer maxValue){
+        return electronicStoreItemService.findItemsOrderByPrices(maxValue);
+    }
+
+    @Operation(summary = "pagination 지원")
+    @GetMapping("/items-page")
+    public Page<Item> findItemsPagination(Pageable pageable){
+        return electronicStoreItemService.findAllWithPageable(pageable);
+    }
+
+    @Operation(summary = "pagination 지원2")
+    @GetMapping("/items-types-page")
+    public Page<Item> findItemsPagination(@RequestParam("type")List<String> types, Pageable pageable){
+        return electronicStoreItemService.findAllWithPageable(types,pageable);
     }
 }

@@ -1,6 +1,10 @@
 package com.github.supercoding.repository.items;
 
+import com.github.supercoding.web.dto.ItemBody;
+import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Objects;
@@ -8,19 +12,37 @@ import java.util.Objects;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString
 @Builder
+@Entity
+@Table(name ="item")
 public class ItemEntity {
+    @jakarta.persistence.Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private int id;
+
+    @Column(name="name",length=50, nullable=false, unique=true)
     private String name;
+
+    @Column(name ="type",length=20, nullable=false)
     private String type;
+
+    @Column(name= "price")
     private Integer price;
 
+    @Column(name="store_id")
     private Integer storeId;
+
+    @Column(name="stock",columnDefinition = "DEFAULT 0 CHECK(stock)>=0")
     private Integer stock;
 
+    @Column(name="cpu",length=30)
     private String cpu;
+
+    @Column(name="capacity",length=30)
     private String capacity;
 
 
@@ -35,4 +57,11 @@ public class ItemEntity {
         this.capacity = capacity;
     }
 
+    public void setItemBody(ItemBody itemBody) {
+        this.name = itemBody.getName();
+        this.type = itemBody.getType();
+        this.price = itemBody.getPrice();
+        this.cpu = itemBody.getSpec().getCpu();
+        this.capacity = itemBody.getSpec().getCapacity();
+    }
 }
