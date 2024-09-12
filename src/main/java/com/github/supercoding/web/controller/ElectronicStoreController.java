@@ -1,18 +1,16 @@
 package com.github.supercoding.web.controller;
 
-import com.github.supercoding.repository.storeSales.StoreSalesRepository;
 import com.github.supercoding.service.ElectronicStoreItemService;
-import com.github.supercoding.web.dto.BuyOrder;
-import com.github.supercoding.web.dto.Item;
-import com.github.supercoding.web.dto.ItemBody;
+import com.github.supercoding.web.dto.Items.BuyOrder;
+import com.github.supercoding.web.dto.Items.Item;
+import com.github.supercoding.web.dto.Items.ItemBody;
+import com.github.supercoding.web.dto.Items.StoreInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +28,7 @@ public class ElectronicStoreController {
     //bean은 final로
     private final ElectronicStoreItemService electronicStoreItemService;
 
-//    private static int serialItemID =1;
+    //    private static int serialItemID =1;
 //    private List<Item> items = new ArrayList<>(Arrays.asList(
 //            new Item(String.valueOf(serialItemID++),"Apple iPhone 12 Pro Max","SmartPhone",123456,"몰라","대충해"),
 //            new Item(String.valueOf(serialItemID++),"Apple iPhone 12 Pro Max","SmartPhone",123456,"몰라","대충"),
@@ -159,5 +157,10 @@ public class ElectronicStoreController {
     @GetMapping("/items-types-page")
     public Page<Item> findItemsPagination(@RequestParam("type")List<String> types, Pageable pageable){
         return electronicStoreItemService.findAllWithPageable(types,pageable);
+    }
+
+    @GetMapping("/stores")
+    public List<StoreInfo> findAllStoreInfo(){
+        return electronicStoreItemService.findAllStoreInfo();
     }
 }

@@ -6,6 +6,7 @@ import com.github.supercoding.repository.flight.Flight;
 import com.github.supercoding.repository.flight.FlightJpaRepository;
 import com.github.supercoding.repository.passenger.Passenger;
 import com.github.supercoding.repository.passenger.PassengerJpaRepository;
+import com.github.supercoding.repository.reservations.FlightPriceAndCharge;
 import com.github.supercoding.repository.reservations.Reservation;
 import com.github.supercoding.repository.reservations.ReservationJpaRepository;
 import com.github.supercoding.repository.users.UserEntity;
@@ -17,6 +18,7 @@ import com.github.supercoding.service.mapper.TicketMapper;
 import com.github.supercoding.web.dto.airline.ReservationRequest;
 import com.github.supercoding.web.dto.airline.ReservationResult;
 import com.github.supercoding.web.dto.airline.Ticket;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -113,5 +115,17 @@ public class AirReservationService {
         Integer totalPrice = airlineTicket.getTotalPrice().intValue();
 
         return  new ReservationResult(prices,charges,tax,totalPrice,isSuccess);
+    }
+
+    public Double findUserFlightSumPrice(Integer userId) {
+        //1. flight_price, charge
+        List<FlightPriceAndCharge> flightPriceAndCharges = reservationJpaRepository.findFlightPriceAndCharge(userId);
+        //2. 모든 flight_price와 charge의 각각 합 구하기
+        Double flightSum = flightPriceAndCharges.stream().mapToDouble(FlightPriceAndCharge::getFlightPrice).sum();
+        log.info(flightSum.toString());
+        Double chargeSum = flightPriceAndCharges.stream().mapToDouble(FlightPriceAndCharge::getCharge).sum();
+        log.info(chargeSum.toString());
+        //3. 두개의 합을 다시 더하고 Return
+        return flightSum + chargeSum;
     }
 }

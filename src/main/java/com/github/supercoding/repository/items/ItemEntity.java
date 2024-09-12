@@ -1,14 +1,11 @@
 package com.github.supercoding.repository.items;
 
 import com.github.supercoding.repository.storeSales.StoreSales;
-import com.github.supercoding.web.dto.ItemBody;
+import com.github.supercoding.web.dto.Items.ItemBody;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.Objects;
 import java.util.Optional;
 
 @Getter

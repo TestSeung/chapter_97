@@ -1,4 +1,4 @@
-package com.github.supercoding.web.dto;
+package com.github.supercoding.web.dto.Items;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

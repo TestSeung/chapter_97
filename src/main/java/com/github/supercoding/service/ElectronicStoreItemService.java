@@ -1,15 +1,15 @@
 package com.github.supercoding.service;
 
 import com.github.supercoding.repository.items.ElectronicStoreItemJpaRepository;
-import com.github.supercoding.repository.items.ElectronicStoreItemRepository;
 import com.github.supercoding.repository.items.ItemEntity;
 import com.github.supercoding.repository.storeSales.StoreSales;
 import com.github.supercoding.repository.storeSales.StoreSalesJpaRepository;
 import com.github.supercoding.repository.storeSales.StoreSalesRepository;
 import com.github.supercoding.service.mapper.ItemMapper;
-import com.github.supercoding.web.dto.BuyOrder;
-import com.github.supercoding.web.dto.Item;
-import com.github.supercoding.web.dto.ItemBody;
+import com.github.supercoding.web.dto.Items.BuyOrder;
+import com.github.supercoding.web.dto.Items.Item;
+import com.github.supercoding.web.dto.Items.ItemBody;
+import com.github.supercoding.web.dto.Items.StoreInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -140,5 +140,13 @@ public class ElectronicStoreItemService {
     public Page<Item> findAllWithPageable(List<String>types,Pageable pageable) {
         Page<ItemEntity> itemEntities= electronicStoreItemJpaRepository.findAllByTypeIn(types,pageable);
         return itemEntities.map(ItemMapper.ISTANCE::itemEntityToItem);
+    }
+
+    @Transactional(transactionManager = "tmJpa1")
+    public List<StoreInfo> findAllStoreInfo() {
+        List<StoreSales> storeSales = storeSalesJpaRepository.findAllFetchJoin();
+        log.info("===============n+1=================");
+        List<StoreInfo> storeInfos = storeSales.stream().map(StoreInfo::new).collect(Collectors.toList());
+        return storeInfos;
     }
 }

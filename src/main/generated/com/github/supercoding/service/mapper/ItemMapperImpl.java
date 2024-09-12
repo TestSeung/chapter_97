@@ -1,14 +1,14 @@
 package com.github.supercoding.service.mapper;
 
 import com.github.supercoding.repository.items.ItemEntity;
-import com.github.supercoding.web.dto.Item;
-import com.github.supercoding.web.dto.ItemBody;
-import com.github.supercoding.web.dto.Spec;
+import com.github.supercoding.web.dto.Items.Item;
+import com.github.supercoding.web.dto.Items.ItemBody;
+import com.github.supercoding.web.dto.Items.Spec;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-09-12T20:47:07+0900",
+    date = "2024-09-12T22:45:47+0900",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.12 (Amazon.com Inc.)"
 )
 public class ItemMapperImpl implements ItemMapper {

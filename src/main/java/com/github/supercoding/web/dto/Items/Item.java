@@ -1,13 +1,11 @@
-package com.github.supercoding.web.dto;
+package com.github.supercoding.web.dto.Items;
 
-import com.github.supercoding.repository.items.ItemEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Objects;
 @Getter
 @Setter
 @NoArgsConstructor
