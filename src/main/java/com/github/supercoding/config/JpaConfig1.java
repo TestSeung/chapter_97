@@ -34,7 +34,7 @@ public class JpaConfig1 {
         Map<String,Object> properties = new HashMap<>();
         properties.put("hibernate.dialect","org.hibernate.dialect.MySQL8Dialect");
         properties.put("hibernate.format_sql", true);
-        properties.put("hibernate.use_sql_comments", true);
+        properties.put("hibernate.use_sql_comment", true);
 
         em.setJpaPropertyMap(properties);
         return em;

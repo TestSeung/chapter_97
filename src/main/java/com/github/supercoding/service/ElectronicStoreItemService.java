@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class ElectronicStoreItemService {
 
    // private final Logger logger= LoggerFactory.getLogger(this.getClass()); //Slf4j
-    private final ElectronicStoreItemRepository electronicStoreItemRepository;
+    //private final ElectronicStoreItemRepository electronicStoreItemRepository;
     private final ElectronicStoreItemJpaRepository electronicStoreItemJpaRepository;
     private final StoreSalesRepository storeSalesRepository;
     private final StoreSalesJpaRepository storeSalesJpaRepository;
@@ -40,11 +40,8 @@ public class ElectronicStoreItemService {
     }
 
     public Integer saveItem(ItemBody itemBody) {
-        ItemEntity itemEntity =new ItemEntity(0,itemBody.getName(),itemBody.getType()
-        ,itemBody.getPrice(),itemBody.getSpec().getCpu(),itemBody.getSpec().getCapacity());
-
+        ItemEntity itemEntity =ItemMapper.ISTANCE.idAndItemBodyToItemEntity(null,itemBody);
         ItemEntity itemEntityCreated=electronicStoreItemJpaRepository.save(itemEntity);
-
       //  return electronicStoreItemRepository.saveItem(itemEntity);
         return itemEntityCreated.getId();
     }
@@ -62,7 +59,8 @@ public class ElectronicStoreItemService {
     }
 
     public List<Item> findItemsByids(List<String> ids) {
-        List<ItemEntity>itemEntities = electronicStoreItemRepository.findAllItems();
+      //  List<ItemEntity>itemEntities = electronicStoreItemRepository.findAllItems();
+        List<ItemEntity>itemEntities=electronicStoreItemJpaRepository.findAll();
         return itemEntities.stream()
                 .map(ItemMapper.ISTANCE::itemEntityToItem)
                 .filter((item)->ids.contains(item.getId()))
@@ -78,8 +76,6 @@ public class ElectronicStoreItemService {
     @Transactional(transactionManager = "tmJpa1")
     public Item updateItem(String id, ItemBody itemBody) {
         Integer idInt = Integer.valueOf(id);
-
-
 //        ItemEntity itemEntity = new ItemEntity(
 //                idInt,itemBody.getName(),itemBody.getType(),
 //                itemBody.getPrice(),itemBody.getSpec().getCpu(),
@@ -101,7 +97,7 @@ public class ElectronicStoreItemService {
         ItemEntity itemEntity = electronicStoreItemJpaRepository.findById(itemId)
                 .orElseThrow(()->new NotFoundException("해당 이름을 찾을 수 없습니다."));
 
-        if(itemEntity.getStoreId()==null) {
+        if(itemEntity.getStoreSales().isEmpty()) {
             log.error("매장을 찾을 수 없습니다.");
             throw new RuntimeException("매장을 찾을 수 없습니다");
         }
@@ -119,7 +115,7 @@ public class ElectronicStoreItemService {
         itemEntity.setStock(itemEntity.getStock() - successBuyItemNums);
 
         //매장 매상 추가
-        StoreSales storeSales = storeSalesJpaRepository.findById(itemEntity.getStoreId()).orElseThrow(()->new NotFoundException("요청하신 StoreId ㄴㄴ"));
+        StoreSales storeSales = itemEntity.getStoreSales().orElseThrow(()->new NotFoundException("요청하신 StoreId ㄴㄴ"));
        // storeSalesRepository.updateSalesAmount(itemEntity.getStoreId(),storeSales.getAmount()+totalPrice);
         storeSales.setAmount(storeSales.getAmount()-totalPrice);
 

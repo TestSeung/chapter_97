@@ -1,5 +1,6 @@
 package com.github.supercoding.repository.items;
 
+import com.github.supercoding.repository.storeSales.StoreSales;
 import com.github.supercoding.web.dto.ItemBody;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -22,7 +24,7 @@ public class ItemEntity {
     @jakarta.persistence.Id
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private int id;
+    private Integer id;
 
     @Column(name="name",length=50, nullable=false, unique=true)
     private String name;
@@ -33,8 +35,9 @@ public class ItemEntity {
     @Column(name= "price")
     private Integer price;
 
-    @Column(name="store_id")
-    private Integer storeId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "store_id", nullable = true)
+    private StoreSales storeSales;
 
     @Column(name="stock",columnDefinition = "DEFAULT 0 CHECK(stock)>=0")
     private Integer stock;
@@ -45,13 +48,16 @@ public class ItemEntity {
     @Column(name="capacity",length=30)
     private String capacity;
 
+    public Optional<StoreSales> getStoreSales() {
+        return Optional.ofNullable(storeSales);
+    }
 
     public ItemEntity(int id, String name, String type, Integer price, String cpu, String capacity) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.price = price;
-        this.storeId = null;
+        this.storeSales = null;
         this.stock = 0;
         this.cpu = cpu;
         this.capacity = capacity;

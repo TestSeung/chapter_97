@@ -17,18 +17,18 @@ import java.util.Map;
 @Configuration
 @EnableJpaRepositories(
         basePackages = {"com.github.supercoding.repository.airlineTicket","com.github.supercoding.repository.passenger",
-                "com.github.supercoding.repository.reservations","com.github.supercoding.repository.users"},
-        entityManagerFactoryRef = "entityManagerFactoryBean2",
+                "com.github.supercoding.repository.reservations","com.github.supercoding.repository.users","com.github.supercoding.repository.flight"},
+        entityManagerFactoryRef = "entityManagerFactory2",
         transactionManagerRef = "tmJpa2"
 )
 public class JpaConfig2 {
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean2(@Qualifier("dataSource2") DataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory2(@Qualifier("dataSource2") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan("com.github.supercoding.repository.airlineTicket","com.github.supercoding.repository.passenger",
-                "com.github.supercoding.repository.reservations","com.github.supercoding.repository.users");
+                "com.github.supercoding.repository.reservations","com.github.supercoding.repository.users","com.github.supercoding.repository.flight");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -36,16 +36,16 @@ public class JpaConfig2 {
         Map<String,Object> properties = new HashMap<>();
         properties.put("hibernate.dialect","org.hibernate.dialect.MySQL8Dialect");
         properties.put("hibernate.format_sql", true);
-        properties.put("hibernate.use_sql_comments", true);
+        properties.put("hibernate.use_sql_comment", true);
 
         em.setJpaPropertyMap(properties);
         return em;
     }
 
     @Bean(name ="tmJpa2")
-    public PlatformTransactionManager transactionManager1(@Qualifier("dataSource2") DataSource dataSource) {
+    public PlatformTransactionManager transactionManager2(@Qualifier("dataSource2") DataSource dataSource) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactoryBean2(dataSource).getObject());
+        transactionManager.setEntityManagerFactory(entityManagerFactory2(dataSource).getObject());
         return transactionManager;
     }
 }
