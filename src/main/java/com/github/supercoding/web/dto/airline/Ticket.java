@@ -3,10 +3,7 @@ package com.github.supercoding.web.dto.airline;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.supercoding.repository.airlineTicket.AirlineTicket;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.format.DateTimeFormatter;
 
@@ -15,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@ToString
 public class Ticket {
     private String depart;
     private String arrival;
