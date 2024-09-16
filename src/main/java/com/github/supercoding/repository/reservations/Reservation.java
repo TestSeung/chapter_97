@@ -23,10 +23,12 @@ public class Reservation {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "passenger_id")
+    @ToString.Exclude
     private Passenger passenger;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "airline_ticket_id")
+    @ToString.Exclude
     private AirlineTicket airlineTicket;
 
     @Column(name = "reservation_status", length = 10)

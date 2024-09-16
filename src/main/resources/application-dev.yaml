@@ -1,4 +1,4 @@
-server:
-  port: 8095
-logging:
-  config: classpath:logback-spring-dev.xml
+#server:
+#  port: 8095
+#logging:
+#  config: classpath:logback-spring-dev.xml
