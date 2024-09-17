@@ -12,6 +12,9 @@ import com.github.supercoding.web.dto.Items.ItemBody;
 import com.github.supercoding.web.dto.Items.StoreInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,12 +36,13 @@ public class ElectronicStoreItemService {
     private final StoreSalesRepository storeSalesRepository;
     private final StoreSalesJpaRepository storeSalesJpaRepository;
 
-
+    @Cacheable(value = "items",key ="#root.methodName")
     public List<Item> findAllItem() {
         List<ItemEntity>itemEntities=electronicStoreItemJpaRepository.findAll();
         return itemEntities.stream().map(ItemMapper.ISTANCE::itemEntityToItem).collect(Collectors.toList());
     }
 
+    @CacheEvict(value = "items",allEntries = true) //불일치성 해결
     public Integer saveItem(ItemBody itemBody) {
         ItemEntity itemEntity =ItemMapper.ISTANCE.idAndItemBodyToItemEntity(null,itemBody);
         ItemEntity itemEntityCreated=electronicStoreItemJpaRepository.save(itemEntity);
@@ -46,7 +50,7 @@ public class ElectronicStoreItemService {
         return itemEntityCreated.getId();
     }
 
-
+    @Cacheable(value = "items",key ="#id")
     public Item findById(String id) {
        // ItemEntity itemEntity = electronicStoreItemRepository.findItem(Integer.valueOf(id));
         Integer idInt=Integer.parseInt(id);
@@ -57,7 +61,7 @@ public class ElectronicStoreItemService {
         Item item =ItemMapper.ISTANCE.itemEntityToItem(itemEntity);
         return item;
     }
-
+    @Cacheable(value = "items",key ="#ids")
     public List<Item> findItemsByids(List<String> ids) {
       //  List<ItemEntity>itemEntities = electronicStoreItemRepository.findAllItems();
         List<ItemEntity>itemEntities=electronicStoreItemJpaRepository.findAll();
@@ -66,7 +70,7 @@ public class ElectronicStoreItemService {
                 .filter((item)->ids.contains(item.getId()))
                 .collect(Collectors.toList());
     }
-
+    @CacheEvict(value = "items",allEntries = true)
     public void deleteItem(String id) {
         //return electronicStoreItemRepository.deleteItem(Integer.valueOf(id));
         Integer itemId = Integer.parseInt(id);
@@ -74,6 +78,7 @@ public class ElectronicStoreItemService {
     }
 
     @Transactional(transactionManager = "tmJpa1")
+    @CacheEvict(value = "items",allEntries = true)
     public Item updateItem(String id, ItemBody itemBody) {
         Integer idInt = Integer.valueOf(id);
 //        ItemEntity itemEntity = new ItemEntity(
