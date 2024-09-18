@@ -2,6 +2,7 @@ package com.github.supercoding.web.advice;
 
 
 
+import com.github.supercoding.service.exceptions.CAuthenticationEntryPointException;
 import com.github.supercoding.service.exceptions.InvalidValueException;
 import com.github.supercoding.service.exceptions.NotAcceptException;
 import com.github.supercoding.service.exceptions.NotFoundException;
@@ -33,5 +34,12 @@ public class ExceptionControllerAdvice {
     public String handleInvalidValueException(InvalidValueException ive) {
         log.error("Clinet 잘못 요청하셨습니다" + ive.getMessage());
         return ive.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(CAuthenticationEntryPointException.class)
+    public String handleAuthenticationEntryPointException(CAuthenticationEntryPointException cae) {
+        log.error("Client 요청에 문제가 있어 다음처럼 출력합니다. "+ cae.getMessage());
+        return cae.getMessage();
     }
 }
