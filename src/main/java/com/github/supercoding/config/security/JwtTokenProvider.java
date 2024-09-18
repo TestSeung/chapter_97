@@ -1,10 +1,12 @@
 package com.github.supercoding.config.security;
 
 import io.jsonwebtoken.Claims;
+
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtTokenProvider {
 
     private final String secretKey = Base64.getEncoder()
@@ -27,7 +30,7 @@ public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-Auth-Token");
+        return request.getHeader("X-AUTH-TOKEN");
     }
 
     public String createToken(String email, List<String>roles){
@@ -43,13 +46,15 @@ public class JwtTokenProvider {
     }
 
     public boolean validateToken(String jwtToken) {
+
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(secretKey)
                     .parseClaimsJws(jwtToken)
                     .getBody();
             Date now = new Date();
-            return !claims.getExpiration().after(now);
+
+            return claims.getExpiration().after(now);
         }catch (Exception e) {
             return false;
         }
@@ -57,7 +62,7 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String jwtToken) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(getUserEmail(jwtToken));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     private String getUserEmail(String jwtToken) {

@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,17 +31,18 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.headers((headerConfig)->headerConfig.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-                .formLogin((formLoginConfig)->formLoginConfig.disable())
-                .csrf((csrfConfig)->csrfConfig.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors((corsConfig)->corsConfig.configurationSource(corsConfigurationSource())) //chaining 등록
-                .httpBasic((httpBasicConfig)->httpBasicConfig.disable())
-                .rememberMe((rememberMeConfig)->rememberMeConfig.disable())
-                .sessionManagement((sessionManagementConfig)->
-                        sessionManagementConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorizeRequests)->authorizeRequests
                         .requestMatchers("/resources/static/**","/v1/api/sign/*").permitAll()
                         .requestMatchers("/v1/api/air-reservation/*").hasRole("USER")
                 )
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .rememberMe(AbstractHttpConfigurer::disable)
+                .sessionManagement((sessionManagementConfig)->
+                        sessionManagementConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(AbstractHttpConfigurer::disable)
+
                 .exceptionHandling((exceptionConfig)->exceptionConfig
                         .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                         .accessDeniedHandler(new CustomerAccessDeniedHandler()))
