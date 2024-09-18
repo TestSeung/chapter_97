@@ -4,9 +4,11 @@ import io.jsonwebtoken.Claims;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,13 +19,21 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider {
+    @Value("${jwt.secret-key-source}")
+    private String secretKeySource;
 
-    private final String secretKey = Base64.getEncoder()
-                                            .encodeToString("super-coding".getBytes());
+    private String secretKey;
+
+    @PostConstruct //component 받은이후 실행
+    public void setUp(){
+        secretKey = Base64.getEncoder()
+                .encodeToString(secretKeySource.getBytes());
+    }
 
     private long tokenValidMillisecond = 1000L * 60 *60; //1시간
 
